@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>迪杰斯特拉算法求最短路径</title>
+      <link href="/2024/06/07/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95%E6%B1%82%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/"/>
+      <url>/2024/06/07/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95%E6%B1%82%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/</url>
+      
+        <content type="html"><![CDATA[<h5 id="一、实验题目：校园导游咨询"><a href="#一、实验题目：校园导游咨询" class="headerlink" title="一、实验题目：校园导游咨询"></a>一、实验题目：校园导游咨询</h5><h5 id="二、实验目的：掌握图的存储方法和最短路经算法"><a href="#二、实验目的：掌握图的存储方法和最短路经算法" class="headerlink" title="二、实验目的：掌握图的存储方法和最短路经算法"></a>二、实验目的：掌握图的存储方法和最短路经算法</h5><h5 id="三、实验要求："><a href="#三、实验要求：" class="headerlink" title="三、实验要求："></a>三、实验要求：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、设计所在学校的校园平面图，所含景点不少于10个。以图中顶点表示校内各景点，存放景点名称、代号、简介等信息；以边表示路径，存放路径长度等相关信息。   </span><br><span class="line">2、为来访客人提供图中任意景点相关信息的查询。   </span><br><span class="line">3、为来访客人提供图中任意景点的纹路查询，即查询任意两个景点之间的一条最短的简单路径。</span><br></pre></td></tr></table></figure><h5 id="四、实验内容和实验步骤"><a href="#四、实验内容和实验步骤" class="headerlink" title="四、实验内容和实验步骤"></a>四、实验内容和实验步骤</h5><p>1.概要设计</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct node//定义景点的结构，包含名称代号简介，还有一个复制构造函数</span><br><span class="line"></span><br><span class="line">void chaxun(string a,const vector&lt;node&gt;&amp; nodes)//通过函数名称，查询整个景点信息,时间复杂度O(nodes.size());</span><br><span class="line"></span><br><span class="line">int dijkstraShortestPath(vector&lt;vector&lt;int&gt;&gt;&amp; graph, int src, int dest, vector&lt;int&gt;&amp; parent) //迪杰斯特拉算法求两点之间的最小路径</span><br><span class="line"></span><br><span class="line">void printPath(const vector&lt;node&gt;&amp; nodes, const vector&lt;int&gt;&amp; parent, int src, int dest) </span><br><span class="line">//输出两点之间的路径,由dijkstraShortestPath（）调用</span><br><span class="line"></span><br><span class="line">main函数先创建景点信息，并添加景点之间的路径长，后通过选择进行查询景点信息还是查询两点之间的最短路径。</span><br></pre></td></tr></table></figure><p>2.主要设计</p><p>主要难点在于两点之间的距离的求解，及路径输出。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">int dijkstraShortestPath(vector&lt;vector&lt;int&gt;&gt;&amp; graph, int src, int dest, vector&lt;int&gt;&amp; parent) </span><br><span class="line">&#123;</span><br><span class="line">    int n = graph.size();</span><br><span class="line">    vector&lt;int&gt; dist(n, INT_MAX);//先定义图中其他点到源点的举例初始为无穷</span><br><span class="line">    dist[src] = 0;</span><br><span class="line">    priority_queue&lt;pair&lt;int, int&gt;, vector&lt;pair&lt;int, int&gt;&gt;, greater&lt;pair&lt;int, int&gt;&gt;&gt; pq;</span><br><span class="line">    //创建优先队列，实现将最小的距离放在最后面，pair的第一个参数是距离，第二个是代号</span><br><span class="line">    pq.push(make_pair(0, src));</span><br><span class="line">    while (!pq.empty()) &#123;</span><br><span class="line">        int u = pq.top().second;</span><br><span class="line">        pq.pop();</span><br><span class="line">        for (int v = 0; v &lt; n; ++v) &#123;//对所有点进行遍历</span><br><span class="line">            if (graph[u][v] &amp;&amp; dist[v] &gt; dist[u] + graph[u][v]) &#123;//判断是否是最小距离</span><br><span class="line">                dist[v] = dist[u] + graph[u][v];</span><br><span class="line">                parent[v] = u; // 记录父节点</span><br><span class="line">                pq.push(make_pair(dist[v], v));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dist[dest];//返回两点之间的最小距离</span><br><span class="line">&#125;</span><br><span class="line">void printPath(const vector&lt;node&gt;&amp; nodes, const vector&lt;int&gt;&amp; parent, int src, int dest) </span><br><span class="line">&#123;</span><br><span class="line">    stack&lt;int&gt; path;</span><br><span class="line">    int current = dest;</span><br><span class="line">    while (current != src) &#123;//将路径上的点放入栈中</span><br><span class="line">        path.push(current);</span><br><span class="line">        current = parent[current];</span><br><span class="line">    &#125;</span><br><span class="line">    path.push(src);</span><br><span class="line">    cout &lt;&lt; nodes[src].name &lt;&lt; &quot; 和 &quot; &lt;&lt; nodes[dest].name &lt;&lt; &quot;之间的最短路径：&quot;;</span><br><span class="line">    while (!path.empty()) &#123;//输出路径上的点</span><br><span class="line">        int nodeIndex = path.top();</span><br><span class="line">        path.pop();</span><br><span class="line">        cout &lt;&lt; nodes[nodeIndex].name;</span><br><span class="line">        if (!path.empty()) cout &lt;&lt; &quot; -&gt; &quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>3.调试分析</p><p><img src="C:\Users\zhj\AppData\Roaming\Typora\typora-user-images\image-20240602205911069.png" alt="image-20240602205911069"></p><p><img src="C:\Users\zhj\AppData\Roaming\Typora\typora-user-images\image-20240602210049529.png" alt="image-20240602210049529"></p><p>建立上面示例网，求景点信息及两个顶点之间的距离正确。</p><h5 id="五、实验总结"><a href="#五、实验总结" class="headerlink" title="五、实验总结"></a>五、实验总结</h5><p>1.学习图的存储方式，及学会迪杰斯特拉算法求两点之间的最小距离。</p><p>2.复习回顾优先队列及栈的知识。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+          <category> 数据结构 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 数据结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>霍夫曼编码</title>
       <link href="/2024/06/05/%E9%9C%8D%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/"/>
       <url>/2024/06/05/%E9%9C%8D%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/</url>
@@ -15,68 +44,18 @@
           
           <category> 算法 </category>
           
+          <category> 数据结构 </category>
+          
       </categories>
       
       
         <tags>
             
-            <tag> 标签1 </tag>
+            <tag> 算法 </tag>
             
-            <tag> 标签2 </tag>
+            <tag> 数据结构 </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>nihao</title>
-      <link href="/2024/06/05/nihao/"/>
-      <url>/2024/06/05/nihao/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>test1</title>
-      <link href="/2024/06/05/test1-1/"/>
-      <url>/2024/06/05/test1-1/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>123</title>
-      <link href="/2024/06/05/123/"/>
-      <url>/2024/06/05/123/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>test1</title>
-      <link href="/2024/06/05/test1/"/>
-      <url>/2024/06/05/test1/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
       
     </entry>
     
