@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>霍夫曼编码</title>
+      <link href="/2024/06/14/%E7%BA%BF%E6%80%A7%E8%A1%A8%E7%9A%84%E5%BA%94%E7%94%A8/"/>
+      <url>/2024/06/14/%E7%BA%BF%E6%80%A7%E8%A1%A8%E7%9A%84%E5%BA%94%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h5 id="一、实验题目：线性表的应用"><a href="#一、实验题目：线性表的应用" class="headerlink" title="一、实验题目：线性表的应用"></a>一、实验题目：线性表的应用</h5><h5 id="二、实验目的：掌握线性表的动态分配顺序存储结构的定义和基本操作的实现。"><a href="#二、实验目的：掌握线性表的动态分配顺序存储结构的定义和基本操作的实现。" class="headerlink" title="二、实验目的：掌握线性表的动态分配顺序存储结构的定义和基本操作的实现。"></a>二、实验目的：掌握线性表的动态分配顺序存储结构的定义和基本操作的实现。</h5><h5 id="三、实验要求："><a href="#三、实验要求：" class="headerlink" title="三、实验要求："></a>三、实验要求：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">约瑟夫问题的实现：n只猴子要选猴王，所有猴子按1,2，…，n编号围坐一圈，从第1只开始按1,2，…，m报数，凡报到m号的猴子退出圈外，如此循环报数，直到圈内剩下一只猴子时，这个猴子就是猴王。编写一个程序实现上述过程，n和m由键盘输入。</span><br></pre></td></tr></table></figure><h5 id="四、实验内容"><a href="#四、实验内容" class="headerlink" title="四、实验内容"></a>四、实验内容</h5><h6 id="1-概要设计"><a href="#1-概要设计" class="headerlink" title="1.概要设计"></a>1.概要设计</h6><p>struct monkey ，定义猴子编号；</p><p>void findking(int n, int m)寻找猴王函数，传入参数为猴子数量及报数；</p><h6 id="2-详细设计"><a href="#2-详细设计" class="headerlink" title="2.详细设计"></a>2.详细设计</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">struct monkey</span><br><span class="line">&#123;</span><br><span class="line">int bianhao;</span><br><span class="line">monkey* next;</span><br><span class="line">&#125;;//定义猴子编号及指针域</span><br><span class="line">void findking(int n, int m)</span><br><span class="line">&#123;</span><br><span class="line">monkey* head = new monkey&#123; 1,nullptr &#125;;//初始化头节点，编号为1，指针域为nullptr</span><br><span class="line">monkey* cur = head;</span><br><span class="line">for (int i = 2; i &lt;= n; i++)</span><br><span class="line">&#123;</span><br><span class="line">monkey* next1 = new monkey&#123; i,nullptr &#125;;</span><br><span class="line">cur-&gt;next = next1;</span><br><span class="line">cur = cur-&gt;next;</span><br><span class="line">&#125;//对n个猴子进行初始化，并通过指针进行相连</span><br><span class="line">cur-&gt;next = head;//最后一个猴子指针域指向头节点，构成一个圈</span><br><span class="line"></span><br><span class="line">//while (cur-&gt;next != head)cur = cur-&gt;next;</span><br><span class="line">cout &lt;&lt; &quot;淘汰编号：&quot;;</span><br><span class="line">while (n)//一共进行n次</span><br><span class="line">&#123;</span><br><span class="line">for (int i = 1; i &lt; m; i++)</span><br><span class="line">&#123;</span><br><span class="line">cur = cur-&gt;next;</span><br><span class="line">&#125;//寻找要淘汰猴子的前一个猴子，因为是单链表，如果当前指针指向淘汰猴子，则无法将前一个猴子与后一个猴子相连</span><br><span class="line">if (n == 1)cout &lt;&lt; endl &lt;&lt; &quot;猴王编号：&quot;;//最后一个就是猴王</span><br><span class="line">cout &lt;&lt; cur-&gt;next-&gt;bianhao &lt;&lt; &quot; &quot;;//当前指针指向淘汰猴子前一个猴子，所以淘汰编号是cur-&gt;next-&gt;bianhao</span><br><span class="line">monkey* temp=cur-&gt;next;</span><br><span class="line">cur-&gt;next = temp-&gt;next;//将前一个猴子的指针域指向下一个猴子</span><br><span class="line">//cur = temp-&gt;next;</span><br><span class="line">delete temp;//删除淘汰猴子</span><br><span class="line">n--;</span><br><span class="line">&#125;</span><br><span class="line">//monkey* temp = cur-&gt;next;</span><br><span class="line">cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">int n, m;</span><br><span class="line">cout &lt;&lt; &quot;输入数量和报数：&quot;;</span><br><span class="line">cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">findking(n, m);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h6 id="3-调试分析"><a href="#3-调试分析" class="headerlink" title="3.调试分析"></a>3.调试分析</h6><p><img src="C:\Users\zhj\AppData\Roaming\Typora\typora-user-images\image-20240331144126561.png" alt="image-20240331144126561"></p><h6 id="4-算法时空分析"><a href="#4-算法时空分析" class="headerlink" title="4.算法时空分析"></a>4.算法时空分析</h6><p>findking(int n, int m)的时间复杂度是O(m*n)；</p><h5 id="五、实验总结"><a href="#五、实验总结" class="headerlink" title="五、实验总结"></a>五、实验总结</h5><p>1.回顾巩固学习struct和时间复杂度计算。</p><p>2.回顾学习单链表。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 数据结构 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 数据结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>迪杰斯特拉算法求最短路径</title>
       <link href="/2024/06/07/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95%E6%B1%82%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/"/>
       <url>/2024/06/07/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95%E6%B1%82%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/</url>
